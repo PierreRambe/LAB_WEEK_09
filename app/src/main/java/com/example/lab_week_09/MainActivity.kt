@@ -15,6 +15,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.lab_week_09.ui.theme.LAB_WEEK_09Theme
 
 class MainActivity : ComponentActivity() {
@@ -26,7 +30,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    HomeScreen()
+                    AppNavigation()
                 }
             }
         }
@@ -34,8 +38,21 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun HomeScreen() {
-    // 🔹 State utama (input dan daftar nama)
+fun AppNavigation() {
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = "home") {
+        composable("home") {
+            HomeScreen(navController)
+        }
+        composable("second") {
+            SecondScreen(navController)
+        }
+    }
+}
+
+@Composable
+fun HomeScreen(navController: NavHostController) {
     var inputText by remember { mutableStateOf("") }
     var nameList by remember { mutableStateOf(listOf("Tanu", "Tina", "Tono")) }
 
@@ -99,13 +116,44 @@ fun HomeScreen() {
                 )
             }
         }
+
+        Button(
+            onClick = { navController.navigate("second") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
+        ) {
+            Text(text = stringResource(id = R.string.button_navigate))
+        }
+    }
+}
+
+@Composable
+fun SecondScreen(navController: NavHostController) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "Selamat! Kamu berhasil berpindah ke Second Screen 🎉",
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Button(onClick = { navController.navigate("home") }) {
+            Text(text = "Kembali ke Home")
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewHomeScreen() {
+fun PreviewApp() {
     LAB_WEEK_09Theme {
-        HomeScreen()
+        HomeScreen(rememberNavController())
     }
 }
