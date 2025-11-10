@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,8 +26,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val list = listOf("Tanu", "Tina", "Tono")
-                    Home(list)
+                    HomeScreen()
                 }
             }
         }
@@ -35,43 +34,69 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Home(items: List<String>) {
-    LazyColumn {
-        item {
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = stringResource(id = R.string.enter_item))
-                TextField(
-                    value = "",
-                    onValueChange = {},
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Text
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                )
-                Button(
-                    onClick = {},
-                    modifier = Modifier.padding(top = 8.dp)
-                ) {
-                    Text(text = stringResource(id = R.string.button_click))
+fun HomeScreen() {
+    // 🔹 State utama (input dan daftar nama)
+    var inputText by remember { mutableStateOf("") }
+    var nameList by remember { mutableStateOf(listOf("Tanu", "Tina", "Tono")) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = stringResource(id = R.string.enter_item),
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        TextField(
+            value = inputText,
+            onValueChange = { inputText = it },
+            placeholder = { Text("Masukkan nama...") },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        )
+
+        Button(
+            onClick = {
+                if (inputText.isNotBlank()) {
+                    nameList = nameList + inputText.trim()
+                    inputText = ""
                 }
-            }
+            },
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .fillMaxWidth()
+        ) {
+            Text(text = stringResource(id = R.string.button_click))
         }
 
-        items(items) { item ->
-            Column(
-                modifier = Modifier
-                    .padding(vertical = 4.dp)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = item)
+        Divider(modifier = Modifier.padding(vertical = 8.dp))
+
+        Text(
+            text = "Daftar Nama:",
+            style = MaterialTheme.typography.titleSmall
+        )
+
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(top = 8.dp)
+        ) {
+            items(nameList) { item ->
+                Text(
+                    text = item,
+                    modifier = Modifier
+                        .padding(vertical = 4.dp)
+                        .fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
         }
     }
@@ -79,8 +104,8 @@ fun Home(items: List<String>) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewHome() {
+fun PreviewHomeScreen() {
     LAB_WEEK_09Theme {
-        Home(listOf("Tanu", "Tina", "Tono"))
+        HomeScreen()
     }
 }

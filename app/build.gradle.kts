@@ -44,13 +44,10 @@ android {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
 
-    // Hindari bentrok versi
     configurations.all {
         resolutionStrategy.force(
             "androidx.core:core-ktx:1.13.1",
-            "androidx.core:core:1.13.1",
-            "androidx.activity:activity-compose:1.9.3",
-            "androidx.activity:activity:1.9.3"
+            "androidx.activity:activity-compose:1.9.3"
         )
     }
 }
@@ -59,14 +56,14 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+
     implementation(platform(libs.androidx.compose.bom))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.foundation:foundation")
+    implementation("androidx.compose.ui:ui-text:1.5.1")
     implementation("androidx.compose.material3:material3:1.1.2")
     implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-text:1.5.1") // ⬅️ WAJIB untuk KeyboardOptions
-    implementation("androidx.compose.ui:ui-text-google-fonts:1.5.1") // ⬅️ optional, tapi memperkuat modul text
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -76,3 +73,4 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 }
+
